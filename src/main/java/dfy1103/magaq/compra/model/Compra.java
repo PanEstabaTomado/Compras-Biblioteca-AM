@@ -33,4 +33,7 @@ public class Compra {
 
     @Column(nullable = false, length = 50)
     private String detalles;
+
+    @Column(nullable = false)
+    private Long idEmpleado;
 }

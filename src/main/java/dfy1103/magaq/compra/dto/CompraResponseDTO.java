@@ -22,4 +22,6 @@ public class CompraResponseDTO {
     private Integer totalConIva;
 
     private String detalles;
+
+    private Long idEmpleado;
 }

@@ -5,17 +5,21 @@ import dfy1103.magaq.compra.dto.CompraResponseDTO;
 import dfy1103.magaq.compra.model.Compra;
 import dfy1103.magaq.compra.repository.CompraRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CompraService {
     private final CompraRepository compraRepository;
+    private final WebClient webClient;
 
     private CompraResponseDTO mapToDOTO(Compra compra){
         return new CompraResponseDTO(
@@ -24,8 +28,30 @@ public class CompraService {
                 compra.getFechaComp(),
                 compra.getTotaSinIva(),
                 compra.getTotalConIva(),
-                compra.getDetalles()
+                compra.getDetalles(),
+                compra.getIdEmpleado()
         );
+    }
+
+    /*
+    -------------------------VALIDANDO EL ID EMPLEADO -----------------------
+     */
+    private void validarEmpleado(Long empleadoId) {
+        try {
+            webClient.get()
+                    .uri("/api//bibliotecaam/empleados/id/{id}", empleadoId)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+            log.info(">>> Empleado {} validada correctamente (WebClient)", empleadoId);
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new RuntimeException(
+                    "El empleado/empleada con id " + empleadoId + " no existe en Empleado.");
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "No se puede conectar con Empleado: " + e.getMessage());
+        }
     }
 
     public Optional<List<CompraResponseDTO>> listarTodos(){
@@ -42,13 +68,15 @@ public class CompraService {
     }
 
     public CompraResponseDTO guardar(CompraRequestDTO doto){
+        validarEmpleado(doto.getIdEmpleado());
         Compra compra = new Compra(
                 null,
                 doto.getNro_factura(),
                 doto.getFechaComp(),
                 doto.getTotaSinIva(),
                 doto.getTotalConIva(),
-                doto.getDetalles()
+                doto.getDetalles(),
+                doto.getIdEmpleado()
         );
         return mapToDOTO(compraRepository.save(compra));
     }
@@ -56,11 +84,13 @@ public class CompraService {
     public Optional<CompraResponseDTO> actualizar(Long id, CompraRequestDTO doto){
         return compraRepository.findById(id).map(existente ->
         {
+            validarEmpleado(doto.getIdEmpleado());
             existente.setNro_factura(doto.getNro_factura());
             existente.setFechaComp(doto.getFechaComp());
             existente.setTotaSinIva(doto.getTotaSinIva());
             existente.setTotalConIva(doto.getTotalConIva());
             existente.setDetalles(doto.getDetalles());
+            existente.setIdEmpleado(doto.getIdEmpleado());
             return mapToDOTO(compraRepository.save(existente));
         });
     }

@@ -14,10 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CompraRequestDTO {
 
-    @Positive(message = "El id no puede ser negativo.")
-    @NotNull(message = "El id no debe estar vacio.")
-    private Long idComp;
-
     @NotNull(message = "El numero de factura no debe estar vacio.")
     private Long nro_factura;
 
@@ -32,4 +28,7 @@ public class CompraRequestDTO {
 
     @NotBlank(message = "Los detalles de compra no pueden estar vacios.")
     private String detalles;
+
+    @NotNull(message = "ERROR: El idEmpleado no puede estar vacio.")
+    private Long idEmpleado;
 }
