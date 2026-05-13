@@ -43,7 +43,7 @@ public class CompraService {
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
-            log.info(">>> Empleado {} validada correctamente (WebClient)", empleadoId);
+            log.info(">>> Empleado {} validado correctamente (WebClient) id:", empleadoId);
 
         } catch (WebClientResponseException.NotFound e) {
             throw new RuntimeException(
