@@ -39,7 +39,7 @@ public class CompraService {
     private void validarEmpleado(Long empleadoId) {
         try {
             webClient.get()
-                    .uri("/api//bibliotecaam/empleados/id/{id}", empleadoId)
+                    .uri("/api//bibliotecaam/empleados/{id}", empleadoId)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
@@ -47,12 +47,16 @@ public class CompraService {
 
         } catch (WebClientResponseException.NotFound e) {
             throw new RuntimeException(
-                    "El empleado/empleada con id " + empleadoId + " no existe en Empleado.");
+                    "El empleado/empleada con id " + empleadoId + " no existe en la Base de Datos de Empleado.");
         } catch (Exception e) {
             throw new RuntimeException(
                     "No se puede conectar con Empleado: " + e.getMessage());
         }
     }
+
+    /*
+    ------------------------------- C R U D ------------------------------------
+     */
 
     public Optional<List<CompraResponseDTO>> listarTodos(){
         return Optional.of(compraRepository.findAll()
@@ -98,4 +102,17 @@ public class CompraService {
     public void eliminar(Long id){
         compraRepository.deleteById(id);
     }
+
+    /*
+    -------- FUNCIONES EXTRAS ------------
+     */
+
+    public List<CompraResponseDTO> listarPorIdUsuario(Long idUsuario){
+        return compraRepository.obtenerPorUsuario(idUsuario)
+                .stream()
+                .map(this::mapToDOTO)
+                .collect(Collectors.toList());
+    }
+
+
 }

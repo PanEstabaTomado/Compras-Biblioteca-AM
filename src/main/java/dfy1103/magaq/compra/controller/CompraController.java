@@ -27,6 +27,11 @@ public class CompraController {
         return compraService.obtenerPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/porusuario")
+    public ResponseEntity<List<CompraResponseDTO>> obtenerPorIdUsuario(@PathVariable Long idUsuario){
+        return ResponseEntity.ok(compraService.listarPorIdUsuario(idUsuario));
+    }
+
     @PostMapping
     public ResponseEntity<CompraResponseDTO> guardar(@Valid @RequestBody CompraRequestDTO doto){
         return ResponseEntity.status(201).body(compraService.guardar(doto));
