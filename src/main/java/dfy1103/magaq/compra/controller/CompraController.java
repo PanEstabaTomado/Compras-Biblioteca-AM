@@ -33,13 +33,13 @@ public class CompraController {
     }
 
     @PostMapping
-    public ResponseEntity<CompraResponseDTO> guardar(@Valid @RequestBody CompraRequestDTO doto){
-        return ResponseEntity.status(201).body(compraService.guardar(doto));
+    public ResponseEntity<CompraResponseDTO> guardar(@Valid @RequestBody CompraRequestDTO doto, @RequestHeader("Authorization") String token){
+        return ResponseEntity.status(201).body(compraService.guardar(doto, token));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompraResponseDTO> actualizar(@PathVariable Long id, @Valid @RequestBody CompraRequestDTO doto){
-        return compraService.actualizar(id, doto)
+    public ResponseEntity<CompraResponseDTO> actualizar(@PathVariable Long id, @Valid @RequestBody CompraRequestDTO doto, @RequestHeader("Authorization") String token){
+        return compraService.actualizar(id, doto, token)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

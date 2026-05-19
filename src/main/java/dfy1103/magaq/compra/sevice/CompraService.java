@@ -36,10 +36,11 @@ public class CompraService {
     /*
     -------------------------VALIDANDO EL ID EMPLEADO -----------------------
      */
-    private void validarEmpleado(Long empleadoId) {
+    private void validarEmpleado(Long empleadoId, String token) {
         try {
             webClient.get()
-                    .uri("/api//bibliotecaam/empleados/{id}", empleadoId)
+                    .uri("/api/bibliotecaam/empleados/{id}", empleadoId)
+                    .header("Authorization", "Bearer " + token)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
@@ -71,8 +72,8 @@ public class CompraService {
 
     }
 
-    public CompraResponseDTO guardar(CompraRequestDTO doto){
-        validarEmpleado(doto.getIdEmpleado());
+    public CompraResponseDTO guardar(CompraRequestDTO doto, String token){
+        validarEmpleado(doto.getIdEmpleado(), token);
         Compra compra = new Compra(
                 null,
                 doto.getNro_factura(),
@@ -85,10 +86,10 @@ public class CompraService {
         return mapToDOTO(compraRepository.save(compra));
     }
 
-    public Optional<CompraResponseDTO> actualizar(Long id, CompraRequestDTO doto){
+    public Optional<CompraResponseDTO> actualizar(Long id, CompraRequestDTO doto, String token){
         return compraRepository.findById(id).map(existente ->
         {
-            validarEmpleado(doto.getIdEmpleado());
+            validarEmpleado(doto.getIdEmpleado(), token);
             existente.setNro_factura(doto.getNro_factura());
             existente.setFechaComp(doto.getFechaComp());
             existente.setTotaSinIva(doto.getTotaSinIva());
