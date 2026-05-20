@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CompraRepository extends JpaRepository<Compra, Long> {
 
-    @Query("SELECT c FROM Compra c WHERE c.idUsuario = :idEntregado ORDER BY c.idEntregado")
-    List<Compra> obtenerPorUsuario(@Param("idEntregado") Long idEntregado);
+    @Query("SELECT c FROM Compra c WHERE c.idEmpleado = :idEntregado")
+    List<Compra> obtenerPorEmpleado(@Param("idEntregado") Long idEntregado);
 
 }

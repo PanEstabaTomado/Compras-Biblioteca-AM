@@ -18,7 +18,7 @@ public class CompraController {
     private final CompraService compraService;
 
     @GetMapping
-    public ResponseEntity<Optional<List<CompraResponseDTO>>> obtenerTodos(){
+    public ResponseEntity<List<CompraResponseDTO>> obtenerTodos(){
         return ResponseEntity.ok(compraService.listarTodos());
     }
 
@@ -28,8 +28,8 @@ public class CompraController {
     }
 
     @GetMapping("/porusuario")
-    public ResponseEntity<List<CompraResponseDTO>> obtenerPorIdUsuario(@PathVariable Long idUsuario){
-        return ResponseEntity.ok(compraService.listarPorIdUsuario(idUsuario));
+    public ResponseEntity<List<CompraResponseDTO>> listarPorIdUsuario(@PathVariable Long idEmpleado){
+        return ResponseEntity.ok(compraService.listarPorIdEmpleado(idEmpleado));
     }
 
     @PostMapping

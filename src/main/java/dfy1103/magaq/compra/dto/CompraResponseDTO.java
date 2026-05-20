@@ -11,7 +11,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompraResponseDTO {
-    private Long idComp;
+
+    private Long idCompra;
 
     private Long nro_factura;
 

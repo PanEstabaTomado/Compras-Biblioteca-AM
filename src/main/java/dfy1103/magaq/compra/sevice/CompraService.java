@@ -23,7 +23,7 @@ public class CompraService {
 
     private CompraResponseDTO mapToDOTO(Compra compra){
         return new CompraResponseDTO(
-                compra.getIdComp(),
+                compra.getIdCompra(),
                 compra.getNro_factura(),
                 compra.getFechaComp(),
                 compra.getTotaSinIva(),
@@ -39,8 +39,8 @@ public class CompraService {
     private void validarEmpleado(Long empleadoId, String token) {
         try {
             webClient.get()
-                    .uri("/api/bibliotecaam/empleados/{id}", empleadoId)
-                    .header("Authorization", "Bearer " + token)
+                    .uri("/api/bibliotecaam/empleado/{id}", empleadoId)
+                    .header("Authorization", token)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
@@ -59,11 +59,11 @@ public class CompraService {
     ------------------------------- C R U D ------------------------------------
      */
 
-    public Optional<List<CompraResponseDTO>> listarTodos(){
-        return Optional.of(compraRepository.findAll()
+    public List<CompraResponseDTO> listarTodos(){
+        return compraRepository.findAll()
                 .stream()
                 .map(this::mapToDOTO)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
     public Optional<CompraResponseDTO> obtenerPorId(Long id){
@@ -108,8 +108,8 @@ public class CompraService {
     -------- FUNCIONES EXTRAS ------------
      */
 
-    public List<CompraResponseDTO> listarPorIdUsuario(Long idUsuario){
-        return compraRepository.obtenerPorUsuario(idUsuario)
+    public List<CompraResponseDTO> listarPorIdEmpleado(Long idEmpleado){
+        return compraRepository.obtenerPorEmpleado(idEmpleado)
                 .stream()
                 .map(this::mapToDOTO)
                 .collect(Collectors.toList());

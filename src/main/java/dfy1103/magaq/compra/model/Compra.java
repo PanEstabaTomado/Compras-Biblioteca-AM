@@ -17,7 +17,7 @@ public class Compra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idComp;
+    private Long idCompra;
 
     @Column(nullable = false,scale = 10)
     private Long nro_factura;
