@@ -5,10 +5,13 @@ import dfy1103.magaq.compra.dto.CompraResponseDTO;
 import dfy1103.magaq.compra.sevice.CompraService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +30,7 @@ public class CompraController {
         return compraService.obtenerPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/porusuario")
+    @GetMapping("/porusuario/{idEmpleado}")
     public ResponseEntity<List<CompraResponseDTO>> listarPorIdUsuario(@PathVariable Long idEmpleado){
         return ResponseEntity.ok(compraService.listarPorIdEmpleado(idEmpleado));
     }
@@ -45,12 +48,16 @@ public class CompraController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id){
+    public ResponseEntity<Map<String,String>> eliminar(@PathVariable Long id){
         if (compraService.obtenerPorId(id).isEmpty()){
-            return ResponseEntity.notFound().build();
-        } else {
+            Map<String, String> borrado = new LinkedHashMap<>();
+            borrado.put("¡ERROR! ", "¡La compra con id "+id+" no fue encontrada!");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(borrado);
+        }else {
             compraService.eliminar(id);
-            return ResponseEntity.noContent().build();
+            Map<String, String> borrado = new LinkedHashMap<>();
+            borrado.put("¡EXITO! ", "¡La compra fue eliminada con exito!");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(borrado);
         }
     }
 }
