@@ -40,7 +40,6 @@ class CompraServiceTest {
     @MockitoBean
     private WebClient webClient;
 
-    // Mocks para la interfaz fluida de WebClient
     @SuppressWarnings("rawtypes")
     private WebClient.RequestHeadersUriSpec requestHeadersUriSpecMock;
     @SuppressWarnings("rawtypes")
