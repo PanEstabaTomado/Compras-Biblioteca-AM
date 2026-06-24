@@ -31,7 +31,7 @@ public class Compra {
     @Column(nullable = false, scale = 7)
     private Integer totalConIva;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 200)
     private String detalles;
 
     @Column(nullable = false)
